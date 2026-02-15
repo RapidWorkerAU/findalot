@@ -1,19 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase";
 import { listingAddress } from "@/lib/types";
 import type { Listing } from "@/lib/types";
 
 export default function SavedPropertiesPage() {
-  const supabase = useMemo(() => supabaseBrowser(), []);
   const [items, setItems] = useState<Listing[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
+      const supabase = supabaseBrowser();
       const { data: auth } = await supabase.auth.getUser();
       const user = auth.user;
 
@@ -34,13 +34,16 @@ export default function SavedPropertiesPage() {
         return;
       }
 
-      const rows = (data ?? []) as Array<{ listings: Listing | null }>;
-      setItems(rows.map((row) => row.listings).filter(Boolean) as Listing[]);
+      const rows = ((data ?? []) as Array<{ listings: Listing | Listing[] | null }>)
+        .map((row) => (Array.isArray(row.listings) ? row.listings[0] ?? null : row.listings))
+        .filter(Boolean) as Listing[];
+
+      setItems(rows);
       setLoading(false);
     }
 
     load();
-  }, [supabase]);
+  }, []);
 
   return (
     <div className="space-y-4">

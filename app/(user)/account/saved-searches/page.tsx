@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase";
 import type { SavedSearch } from "@/lib/types";
 
 export default function SavedSearchesPage() {
-  const supabase = useMemo(() => supabaseBrowser(), []);
   const [items, setItems] = useState<SavedSearch[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
+      const supabase = supabaseBrowser();
       const { data: auth } = await supabase.auth.getUser();
       const user = auth.user;
 
@@ -37,7 +37,7 @@ export default function SavedSearchesPage() {
     }
 
     load();
-  }, [supabase]);
+  }, []);
 
   return (
     <div className="space-y-4">

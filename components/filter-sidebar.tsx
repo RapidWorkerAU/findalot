@@ -1,14 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase";
 
 export function FilterSidebar({ title, mode }: { title: string; mode: "buy" | "sold" }) {
-  const supabase = useMemo(() => supabaseBrowser(), []);
   const [savedMsg, setSavedMsg] = useState<string>("");
   const [error, setError] = useState<string>("");
 
   async function saveSearch() {
+    const supabase = supabaseBrowser();
     setError("");
     setSavedMsg("");
 

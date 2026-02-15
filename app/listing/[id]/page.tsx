@@ -5,8 +5,8 @@ import { supabaseServer } from "@/lib/supabase-server";
 import { listingAddress } from "@/lib/types";
 import type { Listing } from "@/lib/types";
 
-export default async function ListingDetailPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default async function ListingDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const supabase = await supabaseServer();
 
   const { data, error } = await supabase

@@ -1,17 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase";
 import type { AccountType } from "@/lib/types";
 
 export function Header() {
   const [type, setType] = useState<AccountType | null>(null);
   const [loading, setLoading] = useState(true);
-  const supabase = useMemo(() => supabaseBrowser(), []);
 
   useEffect(() => {
     let mounted = true;
+    const supabase = supabaseBrowser();
 
     async function loadType() {
       const { data: userData } = await supabase.auth.getUser();
@@ -45,9 +45,10 @@ export function Header() {
       mounted = false;
       listener.subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, []);
 
   async function signOut() {
+    const supabase = supabaseBrowser();
     await supabase.auth.signOut();
     setType(null);
     window.location.href = "/";

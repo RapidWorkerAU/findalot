@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabaseBrowser } from "@/lib/supabase";
 
 export function SaveButtons({ listingId }: { listingId: string }) {
-  const supabase = useMemo(() => supabaseBrowser(), []);
   const [saved, setSaved] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
     async function loadSavedState() {
+      const supabase = supabaseBrowser();
       const { data: auth } = await supabase.auth.getUser();
       const user = auth.user;
       setUserId(user?.id ?? null);
@@ -29,9 +29,10 @@ export function SaveButtons({ listingId }: { listingId: string }) {
     }
 
     loadSavedState();
-  }, [listingId, supabase]);
+  }, [listingId]);
 
   async function toggle() {
+    const supabase = supabaseBrowser();
     setError("");
     if (!userId) {
       setError("Please log in to save properties.");

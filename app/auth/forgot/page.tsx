@@ -4,12 +4,12 @@ import { useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase";
 
 export default function ForgotPasswordPage() {
-  const supabase = supabaseBrowser();
   const [email, setEmail] = useState("");
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
 
   async function onSubmit(e: React.FormEvent) {
+    const supabase = supabaseBrowser();
     e.preventDefault();
     setNotice("");
     setError("");

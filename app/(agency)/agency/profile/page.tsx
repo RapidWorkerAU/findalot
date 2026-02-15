@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase";
 
 export default function AgencyProfileSettingsPage() {
-  const supabase = useMemo(() => supabaseBrowser(), []);
   const [agencyId, setAgencyId] = useState("");
   const [name, setName] = useState("");
   const [region, setRegion] = useState("");
@@ -15,6 +14,7 @@ export default function AgencyProfileSettingsPage() {
 
   useEffect(() => {
     async function load() {
+      const supabase = supabaseBrowser();
       const { data: auth } = await supabase.auth.getUser();
       const user = auth.user;
       if (!user) return;
@@ -39,9 +39,10 @@ export default function AgencyProfileSettingsPage() {
     }
 
     load();
-  }, [supabase]);
+  }, []);
 
   async function onSave(e: React.FormEvent<HTMLFormElement>) {
+    const supabase = supabaseBrowser();
     e.preventDefault();
     setStatus("");
     setError("");
@@ -84,7 +85,8 @@ export default function AgencyProfileSettingsPage() {
     setStatus("Profile saved.");
   }
 
-  const logoUrl = logoPath ? supabase.storage.from("agency-media").getPublicUrl(logoPath).data.publicUrl : "";
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const logoUrl = logoPath && supabaseUrl ? `${supabaseUrl}/storage/v1/object/public/agency-media/${logoPath}` : "";
 
   return (
     <div className="space-y-4">

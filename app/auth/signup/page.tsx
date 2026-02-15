@@ -1,15 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase";
 import type { AccountType } from "@/lib/types";
 
 export default function SignupPage() {
   const router = useRouter();
-  const sp = useSearchParams();
-  const preset = sp.get("type");
-  const supabase = supabaseBrowser();
 
   const [type, setType] = useState<AccountType>("user");
   const [fullName, setFullName] = useState("");
@@ -21,10 +18,13 @@ export default function SignupPage() {
   const [notice, setNotice] = useState("");
 
   useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    const preset = sp.get("type");
     if (preset === "agency" || preset === "user") setType(preset);
-  }, [preset]);
+  }, []);
 
   async function onSignup(e: React.FormEvent) {
+    const supabase = supabaseBrowser();
     e.preventDefault();
     setLoading(true);
     setError("");

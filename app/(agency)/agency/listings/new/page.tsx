@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase";
 import type { ListingTier } from "@/lib/types";
@@ -15,7 +15,6 @@ const tierAmount: Record<Tier, number> = {
 
 export default function NewListingPage() {
   const router = useRouter();
-  const supabase = useMemo(() => supabaseBrowser(), []);
   const [tier, setTier] = useState<Tier>("free");
   const [agencyId, setAgencyId] = useState<string>("");
   const [loading, setLoading] = useState(false);
@@ -23,6 +22,7 @@ export default function NewListingPage() {
 
   useEffect(() => {
     async function loadMembership() {
+      const supabase = supabaseBrowser();
       const { data: auth } = await supabase.auth.getUser();
       if (!auth.user) return;
 
@@ -37,9 +37,10 @@ export default function NewListingPage() {
     }
 
     loadMembership();
-  }, [supabase]);
+  }, []);
 
   async function uploadCategoryFiles(listingId: string, category: "photo" | "floorplan" | "other", files: File[]) {
+    const supabase = supabaseBrowser();
     const folder = category === "photo" ? "photos" : category === "floorplan" ? "floorplans" : "other";
     const imageRows: Array<{
       listing_id: string;
@@ -73,6 +74,7 @@ export default function NewListingPage() {
   }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    const supabase = supabaseBrowser();
     e.preventDefault();
     setLoading(true);
     setError("");

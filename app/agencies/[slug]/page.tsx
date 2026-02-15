@@ -3,8 +3,8 @@ import { ListingCard } from "@/components/listing-card";
 import { supabaseServer } from "@/lib/supabase-server";
 import type { Agency, Listing } from "@/lib/types";
 
-export default async function AgencyDetailPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function AgencyDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const supabase = await supabaseServer();
 
   const { data: agencyData, error: agencyError } = await supabase.from("agencies").select("*").eq("slug", slug).maybeSingle();

@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase";
 
 type Props = {
@@ -10,12 +10,12 @@ type Props = {
 };
 
 export function EnquiryForm({ listingId, agencyId, defaultSubject }: Props) {
-  const supabase = useMemo(() => supabaseBrowser(), []);
   const [status, setStatus] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
+    const supabase = supabaseBrowser();
     e.preventDefault();
     setLoading(true);
     setError("");

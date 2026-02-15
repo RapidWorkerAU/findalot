@@ -7,13 +7,13 @@ import type { AccountType } from "@/lib/types";
 
 export default function LoginPage() {
   const router = useRouter();
-  const supabase = supabaseBrowser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   async function onLogin(e: React.FormEvent) {
+    const supabase = supabaseBrowser();
     e.preventDefault();
     setLoading(true);
     setError("");
